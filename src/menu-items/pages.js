@@ -26,7 +26,7 @@ const pages = {
             id: 'register1',
             title: 'Register',
             type: 'item',
-            url: '/auth/register',
+            url: '/auth/sign-up',
             icon: icons.ProfileOutlined,
             target: true
         }

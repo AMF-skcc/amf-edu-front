@@ -3,6 +3,7 @@ import { Box, IconButton, Link, useMediaQuery } from '@mui/material';
 import { GithubOutlined } from '@ant-design/icons';
 
 // project import
+import Search from './Search';
 import Profile from './Profile';
 import MobileSection from './MobileSection';
 
@@ -13,7 +14,7 @@ const HeaderContent = () => {
 
     return (
         <>
-            {/*{!matchesXs && <Search />}*/}
+            {!matchesXs && <Search />}
             {!matchesXs && <Box sx={{ width: '100%', ml: { xs: 0, md: 1 } }} />}
 
             {/*<IconButton*/}
