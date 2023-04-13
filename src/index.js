@@ -1,3 +1,4 @@
+import React from 'react';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -15,21 +16,21 @@ import 'assets/third-party/apex-chart.css';
 import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
-import AuthGuard from "./pages/AuthGuard";
+import AuthGuard from './pages/AuthGuard';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
 ReactDOM.render(
-    <StrictMode>
-        <ReduxProvider store={store}>
-            <BrowserRouter>
-                <AuthGuard>
-                    <App />
-                </AuthGuard>
-            </BrowserRouter>
-        </ReduxProvider>
-    </StrictMode>,
-    document.getElementById('root')
+	<StrictMode>
+		<ReduxProvider store={store}>
+			<BrowserRouter>
+				<AuthGuard>
+					<App />
+				</AuthGuard>
+			</BrowserRouter>
+		</ReduxProvider>
+	</StrictMode>,
+	document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

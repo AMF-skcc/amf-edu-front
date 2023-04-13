@@ -1,11 +1,12 @@
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 // ==============================|| MINIMAL LAYOUT ||============================== //
 
 const MinimalLayout = () => (
-    <>
-        <Outlet />
-    </>
+	<>
+		<Outlet />
+	</>
 );
 
 export default MinimalLayout;
