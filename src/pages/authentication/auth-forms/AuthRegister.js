@@ -14,9 +14,7 @@ import {
 	InputLabel,
 	OutlinedInput,
 	Stack,
-	Typography,
-	Select,
-	MenuItem
+	Typography
 } from '@mui/material';
 
 // third party
@@ -29,16 +27,14 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { createMember } from '../../../api/authentication';
+import { createMember } from 'api/authentication';
 import { useSnackbar } from 'notistack';
-import { getAllTeamList } from '../../../api/team';
 
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const AuthRegister = () => {
 	const [level, setLevel] = useState();
 	const [showPassword, setShowPassword] = useState(false);
-	const [teams, setTeams] = useState([]);
 
 	const { enqueueSnackbar } = useSnackbar();
 	const navigate = useNavigate();
@@ -58,8 +54,6 @@ const AuthRegister = () => {
 
 	useEffect(async () => {
 		changePassword('');
-		const result = await getAllTeamList();
-		setTeams(result);
 	}, []);
 
 	return (
@@ -67,22 +61,24 @@ const AuthRegister = () => {
 			<Formik
 				initialValues={{
 					name: '',
+					nickname: '',
 					email: '',
-					teamId: '1',
 					role: '',
 					password: '',
+					passwordCheck: '',
 					submit: null
 				}}
 				validationSchema={Yup.object().shape({
-					name: Yup.string().max(255).required('이름은 필수입니다.'),
+					name: Yup.string().max(10).required('이름은 필수입니다.'),
+					nickname: Yup.string().max(10).required('닉네임은 필수입니다.'),
 					email: Yup.string().email('Must be a valid email').max(255).required('이메일은 필수입니다.'),
-					password: Yup.string().max(255).required('비밀번호는 필수입니다.'),
-					teamId: Yup.string().max(255).required('팀은 필수선택입니다.')
+					password: Yup.string().min(8, '비밀번호는 최소 8자리이상 필요합니다.').max(255).required('비밀번호는 필수입니다.'),
+					passwordCheck: Yup.string()
+						.required('비밀번호 확인은 필수입니다.')
+						.oneOf([Yup.ref('password')], '비밀번호가 일치하지 않습니다.')
 				})}
 				onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
 					try {
-						console.log('values:', values);
-
 						await createMember(values);
 
 						setStatus({ success: false });
@@ -121,6 +117,28 @@ const AuthRegister = () => {
 									{touched.name && errors.name && (
 										<FormHelperText error id="helper-text-name-signup">
 											{errors.name}
+										</FormHelperText>
+									)}
+								</Stack>
+							</Grid>
+							<Grid item xs={12}>
+								<Stack spacing={1}>
+									<InputLabel htmlFor="nickname-signup">닉네임 *</InputLabel>
+									<OutlinedInput
+										fullWidth
+										error={Boolean(touched.nickname && errors.nickname)}
+										id="nickname-login"
+										type="nickname"
+										value={values.nickname}
+										name="nickname"
+										onBlur={handleBlur}
+										onChange={handleChange}
+										placeholder="닉네임을 입력하세요."
+										inputProps={{}}
+									/>
+									{touched.nickname && errors.nickname && (
+										<FormHelperText error id="helper-text-nickname-signup">
+											{errors.nickname}
 										</FormHelperText>
 									)}
 								</Stack>
@@ -175,7 +193,7 @@ const AuthRegister = () => {
 												</IconButton>
 											</InputAdornment>
 										}
-										placeholder="비밀번호를 입력하세요."
+										placeholder="8자 이상의 비밀번호를 입력하세요."
 										inputProps={{}}
 									/>
 									{touched.password && errors.password && (
@@ -199,50 +217,36 @@ const AuthRegister = () => {
 							</Grid>
 							<Grid item xs={12}>
 								<Stack spacing={1}>
-									<InputLabel htmlFor="teamId-signup">팀 *</InputLabel>
-									<Select
-										fullWidth
-										error={Boolean(touched.teamId && errors.teamId)}
-										id="teamId-signup"
-										value={values.teamId}
-										name="teamId"
-										onBlur={handleBlur}
-										onChange={handleChange}
-										placeholder="팀을 선택하세요"
-										inputProps={{}}
-									>
-										{teams.map((o) => {
-											return (
-												<MenuItem value={o.id} key={o.id}>
-													{o.name}
-												</MenuItem>
-											);
-										})}
-									</Select>
-									{touched.teamId && errors.teamId && (
-										<FormHelperText error id="helper-text-teamId-signup">
-											{errors.teamId}
-										</FormHelperText>
-									)}
-								</Stack>
-							</Grid>
-							<Grid item xs={12}>
-								<Stack spacing={1}>
-									<InputLabel htmlFor="role-signup">역할</InputLabel>
+									<InputLabel htmlFor="password-check-signup">비밀번호 확인 *</InputLabel>
 									<OutlinedInput
 										fullWidth
-										error={Boolean(touched.role && errors.role)}
-										id="role-signup"
-										value={values.role}
-										name="role"
+										error={Boolean(touched.passwordCheck && errors.passwordCheck)}
+										// error={Boolean(values.password != values.passwordCheck)}
+										id="password-check-signup"
+										type={showPassword ? 'text' : 'password'}
+										value={values.passwordCheck}
+										name="passwordCheck"
 										onBlur={handleBlur}
 										onChange={handleChange}
-										placeholder="역할을 입력하세요."
+										endAdornment={
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle password check visibility"
+													onClick={handleClickShowPassword}
+													onMouseDown={handleMouseDownPassword}
+													edge="end"
+													size="large"
+												>
+													{showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+												</IconButton>
+											</InputAdornment>
+										}
+										placeholder="비밀번호를 확인해주세요."
 										inputProps={{}}
 									/>
-									{touched.role && errors.role && (
-										<FormHelperText error id="helper-text-role-signup">
-											{errors.role}
+									{touched.passwordCheck && errors.passwordCheck && (
+										<FormHelperText error id="helper-text-password-check-signup">
+											{errors.passwordCheck}
 										</FormHelperText>
 									)}
 								</Stack>
