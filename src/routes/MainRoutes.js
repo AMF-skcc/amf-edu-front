@@ -5,6 +5,7 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
+const DefaultPage = Loadable(lazy(() => import('pages/DefaultPage')));
 const Profile = Loadable(lazy(() => import('pages/profile/Profile')));
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -13,10 +14,10 @@ const MainRoutes = {
 	path: '/',
 	element: <MainLayout />,
 	children: [
-		// {
-		//     path: '/',
-		//     element: <DashboardDefault />
-		// },
+		{
+			path: '/',
+			element: <DefaultPage />
+		},
 		// {
 		//     path: 'dashboard',
 		//     children: [

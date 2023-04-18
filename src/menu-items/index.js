@@ -1,11 +1,11 @@
 // project import
 import pages from './pages';
-import utilities from './utilities';
+import admin from './admin';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-	items: [pages, utilities]
+	items: [pages, admin]
 };
 
 export default menuItems;

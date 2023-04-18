@@ -9,7 +9,8 @@ import {
 	ScheduleOutlined,
 	EyeOutlined
 } from '@ant-design/icons';
-import { ADMIN_TYPE } from '../utils/constant';
+import { ADMIN_TYPE } from 'utils/constant';
+import LocalLibraryRoundedIcon from '@mui/icons-material/LocalLibraryRounded';
 
 // icons
 const icons = {
@@ -20,14 +21,15 @@ const icons = {
 	LoadingOutlined,
 	AppstoreAddOutlined,
 	ScheduleOutlined,
-	EyeOutlined
+	EyeOutlined,
+	LocalLibraryRoundedIcon
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
 
-const utilities = {
-	id: 'course-menu',
-	title: 'Course',
+const admin = {
+	id: 'admin-menu',
+	title: '관리자',
 	type: 'group',
 	children: [
 		// {
@@ -53,58 +55,27 @@ const utilities = {
 		//     ]
 		// },
 		{
-			id: 'course',
-			title: '수강신청',
-			type: 'collapse',
-			icon: icons.ScheduleOutlined,
-			children: [
-				{
-					id: 'course-register',
-					title: '신청',
-					type: 'item',
-					url: '/course-register',
-					breadcrumbs: false
-				},
-				{
-					id: 'course-check',
-					title: '신청내역',
-					type: 'item',
-					url: '/course-check',
-					breadcrumbs: false
-				}
-			]
-		},
-		{
-			id: 'admin',
-			title: '관리자 영역',
+			id: 'book-admin',
+			title: '도서 관리자',
 			authority: ADMIN_TYPE,
 			type: 'collapse',
-			icon: icons.EyeOutlined,
+			icon: icons.LocalLibraryRoundedIcon,
 			children: [
 				{
-					id: 'team',
-					title: '팀 관리',
+					id: 'book',
+					title: '도서 관리',
 					type: 'item',
-					url: '/admin/team',
-					breadcrumbs: false
+					url: '/book-admin/book'
 				},
 				{
-					id: 'instructor',
-					title: '강사 관리',
+					id: 'category',
+					title: '카테고리 관리',
 					type: 'item',
-					url: '/admin/instructor',
-					breadcrumbs: false
-				},
-				{
-					id: 'course',
-					title: '강의 관리',
-					type: 'item',
-					url: '/admin/course',
-					breadcrumbs: false
+					url: '/'
 				}
 			]
 		}
 	]
 };
 
-export default utilities;
+export default admin;
