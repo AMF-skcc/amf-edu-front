@@ -29,6 +29,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { createMember } from 'api/authentication';
 import { useSnackbar } from 'notistack';
+import CustomError from 'utils/CustomError';
 
 // ============================|| FIREBASE - REGISTER ||============================ //
 
@@ -53,6 +54,7 @@ const AuthRegister = () => {
 	};
 
 	useEffect(async () => {
+		console.log('url:', process.env.REACT_APP_MEMBER_API_SERVER);
 		changePassword('');
 	}, []);
 
@@ -60,40 +62,36 @@ const AuthRegister = () => {
 		<>
 			<Formik
 				initialValues={{
-					name: '',
+					username: '',
 					nickname: '',
 					email: '',
-					role: '',
 					password: '',
 					passwordCheck: '',
 					submit: null
 				}}
 				validationSchema={Yup.object().shape({
-					name: Yup.string().max(10).required('이름은 필수입니다.'),
+					username: Yup.string().max(10).required('이름은 필수입니다.'),
 					nickname: Yup.string().max(10).required('닉네임은 필수입니다.'),
-					email: Yup.string().email('Must be a valid email').max(255).required('이메일은 필수입니다.'),
+					email: Yup.string().email('이메일 형식으로 입력해주세요.').max(255).required('이메일은 필수입니다.'),
 					password: Yup.string().min(8, '비밀번호는 최소 8자리이상 필요합니다.').max(255).required('비밀번호는 필수입니다.'),
 					passwordCheck: Yup.string()
 						.required('비밀번호 확인은 필수입니다.')
 						.oneOf([Yup.ref('password')], '비밀번호가 일치하지 않습니다.')
 				})}
 				onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-					try {
-						await createMember(values);
-
+					const response = await createMember(values);
+					if (response instanceof CustomError) {
+						enqueueSnackbar(response.message, { variant: 'error' });
 						setStatus({ success: false });
-						setSubmitting(false);
-
-						enqueueSnackbar('회원가입에 성공하였습니다.', { variant: 'success' });
-						navigate('/auth/login');
-					} catch (err) {
-						console.error(err);
-						setStatus({ success: false });
-						setErrors({ submit: err.message });
-						setSubmitting(false);
-
-						enqueueSnackbar('회원가입에 실패하였습니다.', { variant: 'error' });
+						setErrors({ submit: response.message });
+						return;
 					}
+
+					setStatus({ success: false });
+					setSubmitting(false);
+
+					enqueueSnackbar('회원가입에 성공하였습니다.', { variant: 'success' });
+					navigate('/auth/login');
 				}}
 			>
 				{({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -101,22 +99,22 @@ const AuthRegister = () => {
 						<Grid container spacing={3}>
 							<Grid item xs={24} md={12}>
 								<Stack spacing={1}>
-									<InputLabel htmlFor="name-signup"> 이름 *</InputLabel>
+									<InputLabel htmlFor="username-signup"> 이름 *</InputLabel>
 									<OutlinedInput
 										fullWidth
-										error={Boolean(touched.name && errors.name)}
-										id="name-signup"
-										type="name"
-										value={values.name}
-										name="name"
+										error={Boolean(touched.username && errors.username)}
+										id="username-signup"
+										type="username"
+										value={values.username}
+										name="username"
 										onBlur={handleBlur}
 										onChange={handleChange}
 										placeholder="이름을 입력하세요"
 										inputProps={{}}
 									/>
-									{touched.name && errors.name && (
+									{touched.username && errors.username && (
 										<FormHelperText error id="helper-text-name-signup">
-											{errors.name}
+											{errors.username}
 										</FormHelperText>
 									)}
 								</Stack>

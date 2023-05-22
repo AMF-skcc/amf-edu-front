@@ -71,7 +71,7 @@ const admin = {
 					id: 'category',
 					title: '카테고리 관리',
 					type: 'item',
-					url: '/'
+					url: '/book-admin/category'
 				}
 			]
 		}
